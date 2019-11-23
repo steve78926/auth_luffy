@@ -1,0 +1,259 @@
+{% extends 'layout.html' %}   {# 继承web目录下的layout.html不需要指定目录吗？ #}
+{% load rbac %}
+
+{% block css %}
+    <style>
+        table {
+            font-size: 12px;
+        }
+
+        .user-area ul {
+            padding-left: 20px;
+        }
+
+        .user-area li {
+            cursor: pointer;
+            padding: 2px 0;
+        }
+
+        .user-area li a {
+            display: block;
+        }
+
+        .user-area li.active {
+            font-weight: bold;
+            color: red;
+        }
+
+        .user-area li.active a {
+            color: red;
+        }
+
+        .role-area tr td a {
+            display: block;
+        }
+
+        .role-area tr.active　 {
+            background-color: green;
+            border-left: 3px solid #fdc00f;
+        }
+
+        .panel-body {
+            font-size: 12px;
+        }
+
+        .permission-area tr.root {
+        {# 一级菜单标题，全选所在单元格的背景色 #} background-color: #f1f7fd;
+        }
+
+        .permission-area tr.root td i {
+        {# 一级菜单标题左侧的向下三角符号 #} margin: 3px;
+        }
+
+        .permission-area .node {
+
+        }
+
+        .permission-area .node input[type='checkbox'] {
+        {# 二级菜单标题及所有权限标题左侧的复选框 #} margin: 0 5px;
+            border-radius: 50%;
+        }
+
+        .permission-area .node .parent {
+        {# 二级菜单盒子标题上下内边距 #} padding: 5px 0px;
+        }
+
+        .permission-area .node label {
+        {# 二级菜单label 字体属性 #} font-weight: normal;
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+        .permission-area .node .children {
+        {# 所有权限 #} padding: 0 0 0 20px;
+        }
+
+        .permission-area .node .children .children {
+            display: inline-block;
+            margin: 2px 5px;
+        }
+
+        .panel-body .form-control {
+            font-size: 12px;
+        }
+
+        .select-help {
+        {# 一级菜单标题右侧的全选及复选框，靠左侧#} float: right;
+
+        }
+
+        .select-help label {
+        {# 一级菜单标题右侧的全选 变为手形符号 #} font-weight: normal;
+            cursor: pointer;
+
+        }
+
+        .select-help .check-all {
+        {# 一级菜单标题右侧的全选 #} float: left;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+    </style>
+{% endblock css %}
+
+
+{% block content %}
+    <h1>菜单列表</h1>
+
+    <div class="luffy-container">
+        <div class="col-md-3 user-area">          {# 让这个面板占页面的1/4 #}
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <i class="fa fa-book" aria-hidden="true"></i>用户信息
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        {% for row in user_list %}
+                            <li class="{% if row.id|safe == user_id %}active {% endif %}">
+                                <a href="?uid={{ row.id }}">{{ row.name }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Table -->
+
+            </div>
+        </div>
+        <div class="col-md-3 role-area">          {# 让这个面板占页面的1/3 #}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="role">
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <i class="fa fa-gavel" aria-hidden="true"></i>角色信息
+                        {% if user_id %}
+                            <button class="btn btn-success btn-xs right"
+                                    style="padding: 2px 8px ; margin: -3px">
+                                <i class="fa fa-save" aria-hidden="true"></i>&nbsp&nbsp
+                                保存
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body"  style="color: #d4d4d4; padding: 10px 5px;">
+                        提示: 点击用户后才能为其分配角色
+                    </div>
+                    <!-- Table -->
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>角色</th>
+                            <th>选项</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in role_list %}
+                            <tr class="{% if row.id|safe == role_id %}active{% endif %}">
+                                {# role_id 是后端返给前端的当前选中的角色id,如果当前行角色id是被选中的角色则active #}
+                                <td>
+                                    {% if user_id %}        {# 如果选择用户，则a标签的链接包含选中用户的uid, 同时包含角色rid ,向后端传udi, rid#}
+                                        <a href="?uid={{ user_id }}&rid={{ row.id }}">{{ row.title }}</a>
+                                    {% else %}              {# 没有选择用户，则a标签的链接包含rid, 只向后端传输rid #}
+                                        <a href="?rid={{ row.id }}">{{ row.title }}</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <input class="" type="checkbox" name="roles" value="{{ row.id }}"
+                                            {% if row.id in user_has_roles_dict %} checked {% endif %}>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 permission-area">          {# 让这个面板占页面的1/3 #}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="permission">
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <i class="fa fa-gavel" aria-hidden="true"></i>权限分配
+                        {% if role_id %}   {# 如果点击了角色，即rose_id存在，才显示权限分配的保存按钮 #}
+
+                            <button class="right btn btn-success btn-xs" style="padding: 2px 8px; margin: -3px">
+                                <i class="fa fa-save" aria-hidden="true"></i>
+                                保存
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="panel-body" style="color: #d4d4d4; padding: 10px 5px;">
+                        提示: 点击角色后才能为其分配权限
+                    </div>
+                    <table class="table">
+                        <tbody>
+                        {% for item in all_menu_list %}
+                            <tr class="root">
+                                <td>
+                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    {{ item.title }} {# 一级菜单的名称 #}
+                                    <div class="select-help">
+                                        <div class="check-all">
+                                            <label for="check_all_{{ item.id }}">全选</label>
+                                            <input id="check_all_{{ item.id }}" type="checkbox">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% if item.children %}
+                                <tr class="node">
+                                    <td>
+                                        {% for node in item.children %}     {# item.children 是二级菜单 #}
+                                            <div class="parent">
+                                                <input id="permission_{{ node.id }}" name="permissions" type="checkbox"
+                                                       value="{{ node.id }}"
+                                                       {% if node.id in user_has_permissions_dict %}checked {% endif %}>
+                                                {# node.id 表示可做二级菜单的url的ID #}
+                                                <label for="permission_{{ node.id }}">{{ node.title }}(菜单)</label>
+                                                {# node.title 表示二级菜单标题 #}
+                                            </div>
+                                            <div class="children">
+                                                {% for child in node.children %}        {# 所有的权限 #}
+                                                    <input id=permission_{{ child.id }}" name="permissions"
+                                                           {% if child.id in user_has_permissions_dict %}checked {% endif %}
+                                                            {# child.id 表示只能做权限的url的ID  #}
+                                                           type="checkbox" value="{{ child.id }}">
+                                                    <label for="permission_{{ child.id }}">{{ child.title }}</label>
+                                                    {# 是权限标题 #}
+                                                {% endfor %}
+                                            </div>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(function() {
+            $('.check-all input:checkbox').change(function (){   //复选框勾选与取消是change事件
+                $(this).parents('.root').next().find(':checkbox').prop('checked',$(this).prop('checked'));    // parents()找当前元素的父元素,直到找到.root
+                // find(':checkbox')  为什么有冒号：  find() 方法返回被选元素的后代元素。后代是子、孙、曾孙，依此类推。:checked 选择器选取所有选中的复选框或单选按钮。
+                // $(this).prop('checked') 表示获取当前选中元素（全选复选框的状态）的第一个匹配元素的值，真或假， 当该方法用于设置属性值时，则为匹配元素集合设置一个或多个属性/值对。
+                // prop('checked',$(this).prop('checked') 表示 全选 如果选中，则下面的子项选中， 否则，下面的子项取消
+            })
+        })
+    </script>
+{% endblock js %}

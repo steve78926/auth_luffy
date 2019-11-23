@@ -1,0 +1,147 @@
+
+.nav {
+    min-width:400px;
+    height:48px;      /*  不明其意 ，已经解决：不设置高度，导航栏将被撑大，高度大于48px */
+    background-color: #2f71ab;
+    color: white;
+    line-height: 48px;
+    font-size: 13px;
+    /*overflow: visible;   !*   不明其意 ，这里为什么用overflow  *!*/
+}
+
+.nav .logo-area {
+    width: 220px;
+    height:48px;
+    background-color: #1c5a9c;
+    text-align: center;   /* 不明其意 ，已经解决：设置div下的img 水平剧中 */
+    overflow:hidden;    /*  不明其意 ，已经解决： 清除浮动 */
+}
+
+.nav .logo-area > a {
+    text-decoration: none;
+    color: white;           /*  这里设置颜色对logo-area > a 有效    a标签不继承颜色  */
+    display: inline-block;    /* 不明其意: 这项决定 logo 图标与路飞学城 4个字的距离   */
+    /* 不明其意 ，已经解决：a标签嵌套img标签，结果a标签不能被img标签撑开，解决1.a{ display:inline-block } 目的是让a标签 可以嵌套img标签 */
+    /* 1. a标签转成行内块后，如不设置高度，行高即a标签的高度 */
+    /* 2. a标签转成行内块后，其下的 img设置成浮动，则img贴靠在a标签的左边框，若a标签不设置成行内块，则img浮动后贴靠在div.logo-area的左边框 */
+}
+
+.nav .logo-area .logo {
+    width: 37px;
+    height: 37px;
+    float: left;     /* 不明其意：未解决，暂时想不明白，先跳过  */
+    margin:6px;      /* 不明其意，已经解决：与父元素的上下左右边距  */
+    margin-right: 10px;
+}
+
+.nav .left-menu {
+    /*font-size: 13px;     !* 不明其意  *!*!*/
+}
+
+.nav .left-menu .menu-item {
+    display: inline-block;   /* 不明其意 ，已经解决：.menu-item 使a标签变成行内块，继承 .nav的line-height，则该a标签的高度就是.nav的高度 */
+    /* 问题2：行内块底边对齐? */
+    padding: 0 15px;
+    cursor: pointer;
+    position: relative;   /* 父相子绝：相对于子盒子more-info子菜单来说, menu-item是父盒子 */
+    color: white;     /* 不明其意 ，已经解决：  a标签有浏览器赋予的默认color, 不继承父元素的颜色 */
+    text-decoration: none;
+}
+
+.nav .left-menu .menu-item:hover {
+    background-color: #337ab7;
+}
+
+.nav .left-menu .menu-item .more-info {
+    display: none;      /*不明其意 ，已经解决：.nav .left-menu .menu-item {  display: inline-block; 使【资管】【用管】【路管】与div块【使用说明】都是行内块，【使用说明】高度比其他3个 */
+      /* 因此，导致页面显示: 【使用说明】比其他3个菜单项要高，解决方法，display:none 不显示 【使用说明】下的子菜单，使其高度与3个子菜单相同即可 */
+    position: absolute;     /* 不明其意 ，已经解决：position: absolute;  使用more-info 脱离标准流，盒子more-info是子菜单，在导航的下面  */
+    top: 48px;
+    left: 0;
+    border: 1px solid rgba(0,0,0, .125);
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0, .175);
+    box-shadow: 0 6px 12px rgba(0,0,0, .175);
+    background-color: #fff;
+    color:#333;
+    z-index: 1003;          /* 不明其意 ，已经解决：绝对定位才可以设置 z-index, 其值越大，层级越高 */
+}
+
+.nav .left-menu .menu-item:hover .more-info {      /* hover .more-info 决定下拉菜单显示是否正常  */
+    display: block;
+}
+
+.nav .left-menu .menu-item .more-info .more-item {
+    display: block;
+    min-width: 120px;
+    padding: 0 15px;
+    line-height: 35px;
+    text-decoration: none;
+    color:#000;
+}
+
+.nav .left-menu .menu-item .more-info .more-item:hover {
+    background-color: #f1f0f0;
+}
+
+.nav .right-menu .user-menu{
+    padding: 0 8px;
+    cursor: pointer;
+    color: white;
+    text-decoration: none;
+}
+
+.nav .right-menu .user-menu:hover {    /* 鼠标放在用户菜单上的背景颜色  */
+    background-color: #337ab7;
+}
+
+.nav .right-menu .user-info {  /* 父盒子  */
+    padding: 0 30px 0 10px;
+    height: 48px;
+    position: relative;         /* 父相子绝：user-info 是父盒子  */
+}
+
+.nav .right-menu .user-info:hover .avatar { /*  没效果, 设置 .nav .right-menu .user-info .more-info {  之后有效果 */
+    background-color: green;
+}
+
+.nav .right-menu .user-info .avatar {    /* 用户信息图标  */
+    display: inline-block;   /* 不明其意 ，已经解决：a标签内包含img, 转成行内块  */
+    padding: 0 10px;
+    height: 48px;
+}
+
+.nav .right-menu .user-info .avatar img {
+    /* margin-top: 2px; */
+}
+
+.nav .right-menu .user-info .more-info {  /* div.more-info 的宽，高是被其下的a标签撑起来的 */
+    display: none;   /* 隐藏子菜单，仅当鼠标放在用户图标上时才显示子菜单 */
+    position: absolute;
+    top: 48px;
+    right: 20px;
+    border: 1px solid rgba(0,0,0, .15);
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    background-color: #fff;
+    color:#333;
+    /*z-index: 1002;   !*  这个索引若删除是什么效果？  *!*/
+}
+
+.nav .right-menu .user-info:hover .more-info {  /*  鼠标放到用户图标，显示子菜单  */
+    display: block;
+}
+
+.nav .right-menu .user-info .more-info .more-item {    /* 下拉菜单 */
+    display:block;
+    min-width: 100px;       /*  下拉菜单过宽：原来160px, 改为100px  */
+    padding: 0px 15px;
+    line-height:  35px;
+    text-decoration: none;
+    color: #000;
+}
+
+.nav .right-menu .user-info .more-info .more-item:hover {   /*  用户：个人信息，注销：子菜单放上去的背景颜色   */
+    background-color: #f1f0f0;
+}
+
+

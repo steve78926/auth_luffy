@@ -1,0 +1,11 @@
+<div>
+    <ol class="breadcrumb no-radius no-margin" style="border-bottom: 1px solid #ddd;">
+        {% for item in record_list %}
+            {% if item.class %}    {# 如果item.class 有值，则。。。 否则。。。 #}
+                <li  class='active'>{{ item.title }}</li>  {# 为什么要加 class='active' #}
+            {% else %}
+                <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</div>

@@ -1,0 +1,4 @@
+
+filter:alpha(opacity=0);
+
+filter: alpha(opacity=0); 兼容IE8及以下的IE浏览器， 而在支持CSS3 opacity 的浏览器中，可以 opacity:0;

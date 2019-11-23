@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% load rbac %}
+
+{% block content %}
+    <h1>角色列表</h1>
+    <div class="luffy-container">
+        <div class="btn-group">
+            <a href="{% memory_url request 'user_add' %}" class="btn btn-default">
+                <i class="fa fa-plus-square"></i> 添加用户
+            </a>
+
+        </div>
+        <table class="table table-bordered table-responsive">
+            <thead>
+            <tr>
+                <td>用户名</td>
+                <td>邮箱</td>
+                <td>级别</td>
+                <td>部门</td>
+                <td>手机</td>
+                <td>重置密码</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in user_queryset %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.email }}</td>
+                    <!--get_level_display 获取UserInfo表的level字段中文名称，如果字段名称是foo, 则get_foo_display -->
+                    <td>{{ row.get_level_display }}</td>
+                    <td>{{ row.department.title }}</td>   <!-- row.department.title  是跨表操作 -->
+                    <td>{{ row.phone }}</td>
+                    <td>
+                        <a href="{% memory_url request 'user_reset_pwd' pk=row.id  %}">重置密码</a>
+                    </td>
+                    <td>
+                        <a style="color:#333" href="{% memory_url request 'user_edit' pk=row.id  %}">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </a>
+                        |
+                        <a style="color:#d9534f" href="{% memory_url request 'user_del' pk=row.id  %}">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

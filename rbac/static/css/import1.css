@@ -1,0 +1,33 @@
+
+.right-body .luffy-container .import-relative {
+    position: relative;
+    display: inline-block;
+    height: 50px;
+    min-width: 300px;
+    overflow: hidden;
+}
+
+.right-body .luffy-container .import-absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    border: 1px dotted #9d9d9d;
+    color: #9d9d9d;
+    line-height:50px;
+    padding-left:15px;
+}
+
+.right-body .luffy-container .import-input {
+   position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: #333;
+    z-index:1001;
+    opacity:0;
+    filter: alpha(opacity=0);
+}

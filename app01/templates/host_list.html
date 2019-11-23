@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% load rbac %}
+
+{% block content %}
+    <h1>角色列表</h1>
+    <div class="luffy-container">
+        <div class="btn-group">
+            <a href="{% memory_url request 'host_add' %}" class="btn btn-default">
+                <i class="fa fa-plus-square"></i> 添加主机
+            </a>
+
+        </div>
+        <table class="table table-bordered table-responsive">
+            <thead>
+            <tr>
+                <td>主机名</td>
+                <td>IP</td>
+                <td>部门</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in host_queryset %}
+                <tr>
+                    <td>{{ row.hostname }}</td>
+                    <td>{{ row.ip }}</td>
+                    <td>{{ row.depart.title }}</td>   <!-- row.department.title  是跨表操作 -->
+                    <td>
+                        <a style="color:#333" href="{% memory_url request 'host_edit' pk=row.id  %}">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </a>
+                        |
+                        <a style="color:#d9534f" href="{% memory_url request 'host_del' pk=row.id  %}">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

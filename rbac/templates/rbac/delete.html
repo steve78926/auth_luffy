@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="luffy-container">
+        <div class="alert alert-danger" role="alert">
+            <form method="post">
+                {% csrf_token %}
+                <p style="font-size: 13px"><i class="fa fa-warning" aria-hidden="true"></i>
+                    删除后将不可恢复， 请确定是否删除？
+                </p>
+                <div style="margin-top:20px">
+                    {# 这是一个通用页面，为了方便其他删除操作也可以使用该delete.html, a标签的跳转url没有写法，而是用一个变量cancle，从给后端传给delete.html#}
+                    <a href="{{ cancle }}" class="btn btn-default btn-sm">取消</a>
+                    {# 当点击确认按钮时,浏览器向服务器发送了一个post请求，http://127.0.0.1:8000/rbac/second/menu/del/14/?_filter=mid%3D13 #}
+                    <input type="submit" class="btn btn-danger btn-sm" value="确认">
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

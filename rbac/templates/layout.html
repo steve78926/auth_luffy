@@ -1,0 +1,90 @@
+{% load staticfiles %}
+{% load rbac %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路飞学城</title>
+    <link rel="shortcut icon" href="{% static 'imgs/luffy-study-logo.png' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/font-awesome/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/import.css' %}">
+    <link rel="stylesheet" href="{% static 'rbac/css/rbac.css' %}">
+    {% block css  %}{% endblock css %}
+</head>
+<body>
+<div class="pg-header">
+    <div class="nav">
+        <div class="logo-area left">
+            <a href="">
+                <img class="logo" src="{% static 'imgs/logo.svg' %}" alt="">
+                <span>路飞学城</span>
+            </a>
+        </div>
+        <div class="left-menu left">
+            <a class="menu-item" href="#">资产管理</a>
+            <a class="menu-item" href="#">用户管理</a>
+            <a class="menu-item" href="#">路飞管理</a>
+            <div class="menu-item">
+                <span>使用说明</span>
+                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <div class="more-info">
+                    <a href="" class="more-item">教师管理</a>
+                    <a href="" class="more-item">学生管理</a>
+                </div>
+            </div>
+        </div>
+        <div class="right-menu right clearfix">
+            <div class="user-info right">
+                <a href="" class="avatar">
+                    <img class="img-circle" src="{% static 'imgs/default.png' %}" alt="">
+                </a>
+                <div class="more-info">
+                    <a href="" class="more-item">个人信息</a>
+                    <a href="" class="more-item">注销</a>
+                </div>
+            </div>
+            <a href="" class="user-menu right">
+                <span>任务</span>
+                <i class="fa fa-bell-o"></i>
+                <span class="badge">4</span>
+            </a>
+            <a href="" class="user-menu right">
+                <span>消息</span>
+                <i class="fa fa-comment-o"></i>
+                <span class="badge bg-primary">4</span>
+            </a>
+            <a href="" class="user-menu right">
+                <span>通知</span>
+                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                <span class="badge bg-danger">4</span>
+            </a>
+            <a href="" class="user-menu right">
+                <span>路飞</span>
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+                <span class="badge bg-success">4</span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="pg-body">
+    <div class="left-menu">
+        <div class="menu-body">         {# 为什么要加这层盒子 #}
+            {% multi_menu request %}     {# request 作为参数传给static_menu模板函数 #}
+        </div>
+
+    </div>
+    <div class="right-body">
+        {%  breadcrumb request %}       {# 面包屑导航条#}
+        {% block content %} {% endblock content %}
+    </div>
+</div>
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+<script src="{% static 'rbac/js/rbac.js' %}"></script>
+{% block js %}{% endblock js %}
+</body>
+</html>

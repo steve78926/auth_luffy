@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}   {# 继承web目录下的layout.html不需要指定目录吗？ #}
+
+{% block content %}
+    <h1>角色列表</h1>
+    <div class="luffy-container">
+        <div class="btn-group">
+
+            <a href="{% url 'rbac:role_add' %}" class="btn btn-default">
+                <i class="fa fa-plus-square"></i> 添加角色
+            </a>
+
+        </div>
+        <table class="table table-bordered table-responsive">
+            <thead>
+            <tr>
+                <td>ID</td>
+                <td>名称</td>
+                <td>选项</td>
+            </tr>
+            </thead>
+            {% for row in roles %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.title }}</td>
+                    <td>
+                                <a style="color:#333" href="{% url 'rbac:role_edit' pk=row.id %}">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                </a>
+                            |
+                                <a style="color:#d9534f" href="{% url 'rbac:role_del' pk=row.id %}">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </a>
+
+                        </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock content %}

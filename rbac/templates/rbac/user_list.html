@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}   {# 继承web目录下的layout.html不需要指定目录吗？ #}
+
+{% block content %}
+    <h1>角色列表</h1>
+    <div class="luffy-container">
+        <div class="btn-group">
+
+            <a href="{% url 'rbac:user_add' %}" class="btn btn-default">
+                <i class="fa fa-plus-square"></i> 添加用户
+            </a>
+
+        </div>
+        <table class="table table-bordered table-responsive">
+            <thead>
+            <tr>
+                <td>序号</td>
+                <td>用户号</td>
+                <td>邮箱</td>
+                <td>重置密码</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in users %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.email }}</td>
+                    <td>
+                        <a href="{% url 'rbac:user_reset_pwd' pk=row.id %}">重置密码</a>
+                    </td>
+                    <td>
+                        <a style="color:#333" href="{% url 'rbac:user_edit' pk=row.id %}">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </a>
+                        |
+                        <a style="color:#d9534f" href="{% url 'rbac:user_del' pk=row.id %}">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock content %}

@@ -133,12 +133,22 @@ MENU_SESSION_KEY = "luffy_permission_menu_key"
 
 #白名单
 VALID_URL_LIST = [          #VALID_URL_LIST 是不受限权控制的白名单
-    '/login/',
     '/admin/.*',
+    '/login/',
 ]
+
+#需要登录能才访问，但无需权限校验
+NO_PERMISSION_LIST = [
+    '/index/',
+    '/logout/',
+]
+
 
 #自动发现路由中URL时， 排除的URL
 AUTO_DISCOVER_EXCLUDE = [
         '/admin/.*',
+        '/login/',
+        '/logout/',
+        '/index/',
     ]
 

@@ -40,10 +40,20 @@ class RbacMiddleware(MiddlewareMixin):
         if not permission_dict:
             return HttpResponse('未获取到用户权限信息，请重新登录！')
 
-        flag = False        #flat = False 表示未匹配成功
         url_record = [
             {'title': '首页', 'url': '#'}
         ]
+
+        #此处代码进行判断 ： /logout/ /index/   这两个URL 无需权限校验，但需要登录能才访问
+        for url in settings.NO_PERMISSION_LIST:
+             if re.match(url, request.path_info):        #白名单中的URL无需权限验证即可访问
+                request.current_selected_permission = 0    #current_selected_permission = 0 表示没有默认选中
+                request.breadcrumb = url_record            #  request.breadcrumb 表示导航条
+                return None     # 返回None 中间件不拦截，继续执行后面的视图
+
+
+        flag = False        #flat = False 表示未匹配成功
+
         #for item in permission_list:
         for item in permission_dict.values():
             reg = "^%s$" % item['url']                # 给url 加起始符，终止符，精确匹配

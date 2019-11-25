@@ -233,6 +233,12 @@ app01.UserInfo_roles.role: (fields.E307) The field app01.UserInfo_roles.role was
 
             写完用户登录逻辑，对于index/，login/，logout/ 三个URL权限是否用分配
 
+            2019-11-23  56-rbac组件应用以及补充（三）
+
+        方案一:
+
+            将
+
 
         在app01/templates/ 里新建user_list.thml (从rbac中复制同名文件)
 
@@ -280,6 +286,39 @@ app01.UserInfo_roles.role: (fields.E307) The field app01.UserInfo_roles.role was
         time: 1:24:21  权限分配功能的编写 2019-11-16
 
         time: 1:33:18  权限分配功能的编写 2019-11-16
+
+
+    4.6  用户登录的逻辑
+
+            写完用户登录逻辑，对于index/，login/，logout/ 三个URL权限是否用分配
+
+            2019-11-23  56-rbac组件应用以及补充（三）
+
+        方案一:
+
+            将 /index/，logout/ 录入数据库，以后给每个用户都分配该权限
+
+        方案二: (推荐)
+
+            默认用户登录后，都能访问 /index/, 和 /login/
+
+            在settings.py 里自动发现 应该排除 /index/, 和 /login/
+             AUTO_DISCOVER_EXCLUDE = [
+                '/admin/.*',
+                '/login/.*',
+                '/logout/',
+                '/index/',
+        ]
+
+          time: 07:19
+        auth_luffy\auth_luffy\settings.py
+
+        auth_luffy\rbac\middlewares\rbac.py
+
+        auth_luffy\rbac\templates\layout.html
+
+
+        注意： WSGIRequest object 其实就是request对象
 
 
 

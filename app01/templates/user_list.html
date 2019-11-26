@@ -5,10 +5,11 @@
     <h1>角色列表</h1>
     <div class="luffy-container">
         <div class="btn-group">
-            <a href="{% memory_url request 'user_add' %}" class="btn btn-default">
-                <i class="fa fa-plus-square"></i> 添加用户
-            </a>
-
+            {% if request |has_permission: 'user_add' %}
+                <a href="{% memory_url request 'user_add' %}" class="btn btn-default">
+                    <i class="fa fa-plus-square"></i> 添加用户
+                </a>
+            {% endif %}
         </div>
         <table class="table table-bordered table-responsive">
             <thead>
@@ -18,8 +19,12 @@
                 <td>级别</td>
                 <td>部门</td>
                 <td>手机</td>
-                <td>重置密码</td>
-                <td>操作</td>
+                {% if request |has_permission: 'user_reset_pwd' %}
+                    <td>重置密码</td>
+                {% endif %}
+                {% if request |has_permission: 'user_eidt' or request |has_permission: 'user_del' %}
+                    <td>操作</td>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -31,19 +36,26 @@
                     <td>{{ row.get_level_display }}</td>
                     <td>{{ row.department.title }}</td>   <!-- row.department.title  是跨表操作 -->
                     <td>{{ row.phone }}</td>
-                    <td>
-                        <a href="{% memory_url request 'user_reset_pwd' pk=row.id  %}">重置密码</a>
-                    </td>
-                    <td>
-                        <a style="color:#333" href="{% memory_url request 'user_edit' pk=row.id  %}">
-                            <i class="fa fa-edit" aria-hidden="true"></i>
-                        </a>
-                        |
-                        <a style="color:#d9534f" href="{% memory_url request 'user_del' pk=row.id  %}">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                        </a>
-
-                    </td>
+                    {% if request |has_permission: 'user_reset_pwd' %}
+                        <td>
+                            <a href="{% memory_url request 'user_reset_pwd' pk=row.id %}">重置密码</a>
+                        </td>
+                    {% endif %}
+                    {% if request |has_permission: 'user_eidt' or request |has_permission: 'user_del' %}
+                        <td>
+                            {% if request |has_permission: 'user_eidt' %}
+                                <a style="color:#333" href="{% memory_url request 'user_edit' pk=row.id %}">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                            |
+                            {% if request |has_permission: 'user_del' %}
+                                <a style="color:#d9534f" href="{% memory_url request 'user_del' pk=row.id %}">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

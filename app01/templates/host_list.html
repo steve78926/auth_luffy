@@ -5,10 +5,12 @@
     <h1>角色列表</h1>
     <div class="luffy-container">
         <div class="btn-group">
+
+            {% if request|has_permission: 'host_add' %}    {#  request | ## | 两边不能有空格， ##has_permission:'host_add' ## 'host_add' 前不能有空格 #}
             <a href="{% memory_url request 'host_add' %}" class="btn btn-default">
                 <i class="fa fa-plus-square"></i> 添加主机
             </a>
-
+            {% endif  %}
         </div>
         <table class="table table-bordered table-responsive">
             <thead>
@@ -16,7 +18,9 @@
                 <td>主机名</td>
                 <td>IP</td>
                 <td>部门</td>
-                <td>操作</td>
+                {% if request|has_permission:'host_eidt' or request|has_permission:'host_del' %}
+                    <td>操作</td>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -25,15 +29,20 @@
                     <td>{{ row.hostname }}</td>
                     <td>{{ row.ip }}</td>
                     <td>{{ row.depart.title }}</td>   <!-- row.department.title  是跨表操作 -->
-                    <td>
-                        <a style="color:#333" href="{% memory_url request 'host_edit' pk=row.id  %}">
-                            <i class="fa fa-edit" aria-hidden="true"></i>
-                        </a>
-                        |
-                        <a style="color:#d9534f" href="{% memory_url request 'host_del' pk=row.id  %}">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                        </a>
-
+                    {% if request|has_permission:'host_eidt' or request|has_permission:'host_del' %}
+                        <td>
+                            {% if request|has_permission:'host_eidt' %}
+                                <a style="color:#333" href="{% memory_url request 'host_edit' pk=row.id  %}">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                            |
+                            {% if request|has_permission:'host_eidt' %}
+                                <a style="color:#d9534f" href="{% memory_url request 'host_del' pk=row.id  %}">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                </a>
+                            {% endif %}
+                    {% endif %}
                     </td>
                 </tr>
             {% endfor %}

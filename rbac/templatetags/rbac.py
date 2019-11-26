@@ -107,6 +107,7 @@ def has_permission(request, name):
     :param name:
     :return:   默认返回None
     '''
+    print("name:",name)
     if name in request.session[settings.PERMISSION_SESSION_KEY]:   #request.session[settings.PERMISSION_SESSION_KEY] 是权限字典
         return True
 
